@@ -27,7 +27,7 @@ export class TicketsController {
 
   @Get('generateQr/:ticketId')
   async generateQr(@Param('ticketId') ticketId: string, @Res() res: Response) {
-    const url = `http://localhost:3000/api/tickets/scanQr/${ticketId}`;
+    const url = `${process.env.HOST_API}/tickets/scanQr/${ticketId}`;
     const qrCode = await QRCode.toDataURL(url);
     res.send(`<img src="${qrCode}" />`);
   }
