@@ -57,7 +57,7 @@ export class TicketsService {
         .where('ticket.id =:id ',{
           id:id,
         })
-        .leftJoinAndSelect("ticket.lots", "Lot") 
+
         .getOne();
 
     if(!ticket){
