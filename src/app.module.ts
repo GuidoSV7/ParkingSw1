@@ -9,7 +9,7 @@ import { SeedModule } from './seed/seed.module';
 import { FilesModule } from './files/files.module';
 import { AuthModule } from './auth/auth.module';
 
-import { ServeStaticModule } from '@nestjs/serve-static';
+
 import { UsersModule } from './users/users.module';
 import { SuscriptionsModule } from './suscriptions/suscriptions.module';
 import { PaymentsModule } from './payments/payments.module';
@@ -32,9 +32,6 @@ import { TicketsModule } from './tickets/tickets.module';
       synchronize: true,
     }),
 
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname,'..','public'), 
-    }),
 
   
 
