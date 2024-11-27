@@ -10,6 +10,7 @@ import { User } from './entities/user.entity';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { Client } from 'src/users/entities/client.entity';
 import { Manager } from 'src/users/entities/manager.entity';
+import { Parking } from 'src/parkings/entities/parking.entity';
 
 @Module({
   controllers: [AuthController],
@@ -17,7 +18,7 @@ import { Manager } from 'src/users/entities/manager.entity';
   imports: [
     ConfigModule,
     
-    TypeOrmModule.forFeature([ User, Client, Manager ]),
+    TypeOrmModule.forFeature([ User, Client, Manager, Parking]),
 
     PassportModule.register({ defaultStrategy: 'jwt' }),
 

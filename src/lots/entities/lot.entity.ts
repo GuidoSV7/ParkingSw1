@@ -14,9 +14,7 @@ export class Lot {
     @Column('boolean', { default: true })
     isAvailable: boolean;
 
-    @ManyToOne(() => Parking, (parking) => parking.lots, { onDelete: 'CASCADE' })
-    @JoinColumn({ name: 'idParking' })
-    parking: Parking;
+
 
 
 }

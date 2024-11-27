@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ParkingsService } from './parkings.service';
-import { CreateParkingDto } from './dto/create-parking.dto';
+
 import { UpdateParkingDto } from './dto/update-parking.dto';
 import { ApiResponse } from '@nestjs/swagger';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
@@ -11,12 +11,7 @@ export class ParkingsController {
   constructor(private readonly parkingsService: ParkingsService) {}
 
  
-  @Post()
-  @ApiResponse({status:201, description:'Parking Creado exitosamente', type: Parking})
-  @ApiResponse({status:400, description:'Bad Request'})
-  create(@Body() createParkingDto: CreateParkingDto) {
-    return this.parkingsService.create(createParkingDto);
-  }
+
 
   @Get()
   findAll( @Query() paginationDto:PaginationDto)  {

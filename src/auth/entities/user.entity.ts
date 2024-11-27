@@ -20,6 +20,9 @@ export class User {
     @Column('text')
     name: string;
 
+    @Column('text')
+    cellphone: string;
+
     @Column('boolean', {
         default: true
     })

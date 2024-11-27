@@ -17,6 +17,10 @@ export class CreateUserDto {
     name: string;
 
     @IsString()
+    @MinLength(1)
+    cellphone: string;
+
+    @IsString()
     rol: string;
 
     @IsString()

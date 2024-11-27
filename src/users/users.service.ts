@@ -9,6 +9,7 @@ import { CreateUserDto } from 'src/auth/dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { Manager } from './entities/manager.entity';
 import { Client } from './entities/client.entity';
+import { Parking } from 'src/parkings/entities/parking.entity';
 
 @Injectable()
 export class UsersService {
@@ -29,6 +30,7 @@ export class UsersService {
 
     @InjectRepository(Client)
     private readonly clientRepository: Repository<Client>,
+
 
     private readonly dataSource: DataSource,
   ){}

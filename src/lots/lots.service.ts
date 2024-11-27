@@ -26,8 +26,7 @@ export class LotsService {
     try {
       const {idParking,...LotDetails} = createLotDto;
       const lot= this.lotRepository.create({
-        ...LotDetails,
-        parking: { id: idParking }
+        ...LotDetails
       });
 
       return await this.lotRepository.save(lot);
@@ -72,7 +71,7 @@ export class LotsService {
 
     const {idParking,...toUpdate} = updateLotDto;
 
-    const lot = await this.lotRepository.preload({ id, ...toUpdate, parking: { id: idParking }});
+    const lot = await this.lotRepository.preload({ id, ...toUpdate});
 
     if(!lot){
       throw new NotFoundException(`Lot con id ${id} no encontrada`);

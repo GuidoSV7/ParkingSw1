@@ -2,7 +2,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { User } from "src/auth/entities/user.entity";
 import { Parking } from "../../parkings/entities/parking.entity";
-import { Column, Entity, OneToMany } from "typeorm";
+import { Column, Entity, OneToMany, OneToOne } from "typeorm";
 import { IsBoolean } from "class-validator";
 
 @Entity('managers')
@@ -28,7 +28,7 @@ export class Manager extends User {
   
       })
     //parkings
-    @OneToMany(() => Parking, (parkings) => parkings.manager,{eager:true})
-    parkings: Parking[]
+    @OneToOne(() => Parking, (parking) => parking.manager)
+    parking: Parking;
 
 }
