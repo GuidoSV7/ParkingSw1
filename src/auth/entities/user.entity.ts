@@ -30,6 +30,10 @@ export class User {
         default: 'user'
     })
     rol: string;
+    
+
+    @Column('text' )
+    tokenFCM: string;
 
 
 

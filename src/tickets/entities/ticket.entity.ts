@@ -1,19 +1,27 @@
-import { PrimaryGeneratedColumn, Column, Entity } from "typeorm";
+import { Lot } from "src/lots/entities/lot.entity";
+import { PrimaryGeneratedColumn, Column, Entity, JoinColumn, OneToOne } from "typeorm";
 
 @Entity('tickets')
 export class Ticket {
     @PrimaryGeneratedColumn('uuid')
     id: string;
-
-    @Column('int')
-    number: number;
-
-    @Column('text',{
-        default: 'avalible'
+  
+    @Column('timestamp')
+    entrance: Date;
+  
+    @Column('timestamp', { nullable: true })
+    exit: Date;
+  
+    @Column('text', {
+      default: 'available',
     })
     state: string;
-
-    @Column('int')
-    duration: number;
+  
+    @Column('float')
+    charge: number;
+  
+    @Column('text', { nullable: true })
+    extra: string;
+  
 
 }

@@ -2,10 +2,23 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { User } from "src/auth/entities/user.entity";
 import { Parking } from "../../parkings/entities/parking.entity";
-import { Entity, OneToMany } from "typeorm";
+import { Column, Entity, OneToMany } from "typeorm";
+import { IsBoolean } from "class-validator";
 
 @Entity('managers')
 export class Manager extends User {
+
+
+  @ApiProperty({
+    description: 'Si el manager esta suscrito o no.',
+    example: false
+  })
+  @Column({
+    type: 'boolean',
+    default: false,
+  })
+  @IsBoolean()
+  IsSuscribed: boolean;
 
     @ApiProperty({
         type: () => Parking,

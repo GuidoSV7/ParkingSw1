@@ -8,7 +8,7 @@ import { CommonModule } from './common/common.module';
 import { SeedModule } from './seed/seed.module';
 import { FilesModule } from './files/files.module';
 import { AuthModule } from './auth/auth.module';
-
+import * as admin from 'firebase-admin';
 
 import { UsersModule } from './users/users.module';
 import { SuscriptionsModule } from './suscriptions/suscriptions.module';
@@ -16,6 +16,10 @@ import { PaymentsModule } from './payments/payments.module';
 import { ParkingsModule } from './parkings/parkings.module';
 import { LotsModule } from './lots/lots.module';
 import { TicketsModule } from './tickets/tickets.module';
+import { NotificationfcmModule } from './notificationfcm/notificationfcm.module';
+import { OffersModule } from './offers/offers.module';
+import { FavoritesModule } from './favorites/favorites.module';
+import { AnnouncementsModule } from './announcements/announcements.module';
 
 @Module({
   imports: [
@@ -67,8 +71,27 @@ import { TicketsModule } from './tickets/tickets.module';
 
     TicketsModule,
 
+    NotificationfcmModule,
+
+    OffersModule,
+
+    FavoritesModule,
+
+    AnnouncementsModule
+
 
 
   ],
 })
-export class AppModule {}
+export class AppModule {
+  constructor() {
+    admin.initializeApp({
+      credential: admin.credential.cert({
+        projectId: process.env.FIREBASE_PROJECT_ID,
+        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+        privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+      }),
+    });
+  }
+}
+

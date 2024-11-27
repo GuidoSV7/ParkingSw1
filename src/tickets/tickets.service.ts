@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { Repository, DataSource } from 'typeorm';
 import { Ticket } from './entities/ticket.entity';
+import { Lot } from 'src/lots/entities/lot.entity';
 
 @Injectable()
 export class TicketsService {
@@ -17,6 +18,9 @@ export class TicketsService {
 
     @InjectRepository(Ticket)
     private readonly ticketRepository: Repository<Ticket>,
+
+    @InjectRepository(Lot)
+    private readonly lotRepository: Repository<Lot>,
     
     
     private readonly dataSource: DataSource,
@@ -28,6 +32,9 @@ export class TicketsService {
       const ticket= this.ticketRepository.create({
         ...TicketDetails
       });
+
+
+
 
       return await this.ticketRepository.save(ticket);
       
@@ -43,6 +50,7 @@ export class TicketsService {
     const {limit = 10, offset = 0} = paginationDto;
 
     return this.ticketRepository.find({
+   
 
     });
     

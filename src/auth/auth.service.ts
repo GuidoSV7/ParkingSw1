@@ -33,7 +33,7 @@ export class AuthService {
     
     try {
 
-      const { password, ...userData } = createUserDto;
+      const { password,...userData } = createUserDto;
       
       const user = this.userRepository.create({
         ...userData,
@@ -67,7 +67,7 @@ export class AuthService {
 
     const user = await this.userRepository.findOne({
       where: { email },
-      select: { email: true, password: true, id: true } //! OJO!
+      select: { email: true, password: true, rol:true, id: true } //! OJO!
     });
 
     if ( !user ) 

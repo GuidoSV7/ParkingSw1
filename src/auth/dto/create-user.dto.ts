@@ -19,4 +19,8 @@ export class CreateUserDto {
     @IsString()
     rol: string;
 
+    @IsString()
+    tokenFCM: string;
+
+
 }

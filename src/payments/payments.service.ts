@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePaymentDto } from './dto/create-payment.dto';
-import { UpdatePaymentDto } from './dto/update-payment.dto';
 import Stripe from 'stripe';
 import { PaymentSessiontDto } from './dto/payment-session.dto';
 import { Request, Response } from 'express';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Ticket } from 'src/tickets/entities/ticket.entity';
 import { Repository, DataSource } from 'typeorm';
+import { Lot } from 'src/lots/entities/lot.entity';
+import { Manager } from 'src/users/entities/manager.entity';
 
 @Injectable()
 export class PaymentsService {
@@ -16,7 +16,12 @@ export class PaymentsService {
 
     @InjectRepository(Ticket)
     private readonly ticketRepository: Repository<Ticket>,
-    
+
+    @InjectRepository(Lot)
+    private readonly lotRepository: Repository<Lot>,
+
+    @InjectRepository(Manager)
+    private readonly managerRepository: Repository<Manager>,
     
     private readonly dataSource: DataSource,
   ){}
@@ -24,13 +29,13 @@ export class PaymentsService {
   private readonly stripe = new Stripe(process.env.STRIPE_SECRET);
 
   async createPaymentSession(paymenSessionDto: PaymentSessiontDto){
-    const {currency, items} = paymenSessionDto;
+    const { items, orderId, typePayment, idUser} = paymenSessionDto;
 
     const lineItems = items.map(item => {
 
       return {
         price_data:{
-          currency: currency,
+          currency: 'usd',
           product_data:{
             name: item.name
           },
@@ -45,7 +50,12 @@ export class PaymentsService {
     const session = await this.stripe.checkout.sessions.create({
       
       payment_intent_data: {
-        metadata:{}
+        metadata:{
+          orderId: orderId,
+          idUser: idUser,
+          typePayment: typePayment,
+
+        }
       },
 
       line_items:lineItems,
@@ -85,13 +95,43 @@ export class PaymentsService {
       case 'charge.succeeded': 
         const chargeSucceeded = event.data.object;
 
+        if (chargeSucceeded.metadata.typePayment === 'Ticket') {
+          const ticket = await this.ticketRepository.findOne({
+            where: {
+              id: chargeSucceeded.metadata.orderId,
+            },
+            relations: ['lot'],
+          });
         
+          
         
+          if (ticket) {
+            await this.ticketRepository.update(ticket.id, {
+              state: 'paid',
+            });
+
+          
+
+          }
+        } else if (chargeSucceeded.metadata.typePayment === 'Subscription') {
+
+          const manager = await this.managerRepository.findOne({
+            where: {
+              id: chargeSucceeded.metadata.idUser,
+            },
+          });
+
+          if (manager) {
+            await this.managerRepository.update(manager.id, {
+              IsSuscribed: true,
+            });
+          }
         
-        console.log({
-          metadata: chargeSucceeded.metadata,
-          orderId: chargeSucceeded.metadata.orderId,
-        });
+          // console.log(chargeSucceeded.metadata)
+        
+
+        }
+
       break;
       
       default:

@@ -44,7 +44,7 @@ export class LotsService {
     const {limit = 10, offset = 0} = paginationDto;
 
     return this.lotRepository.find({
-
+      where: { isAvailable: true },
     });
     
   }

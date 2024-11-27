@@ -4,19 +4,12 @@ import { IsBoolean, IsNumber, IsString } from "class-validator";
 export class CreateLotDto {
 
     @ApiProperty({
-        description: 'Nombre del lote',
-        example: 'Lot A1',
+        description: 'Numero del Lot',
+        example: '53',
       })
-      @IsString()
-      name: string;
+      @IsNumber()
+      number: number;
     
-      @ApiProperty({
-        description: 'Disponibilidad del lote',
-        example: true,
-        default: true,
-      })
-      @IsBoolean()
-      isAvailable: boolean;
 
       @ApiProperty({
         description: 'Piso al que pertenece el lote',

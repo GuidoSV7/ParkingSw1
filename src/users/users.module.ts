@@ -6,12 +6,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/auth/entities/user.entity';
 import { Client } from './entities/client.entity';
 import { Manager } from './entities/manager.entity';
+import { Favorite } from 'src/favorites/entities/favorite.entity';
 
 
 @Module({
   controllers: [UsersController],
   providers: [UsersService],
-  imports:[TypeOrmModule.forFeature([User, Client, Manager]),
+  imports:[TypeOrmModule.forFeature([User, Client, Manager, Favorite]),
     AuthModule
   ],
   exports: [UsersService, TypeOrmModule]

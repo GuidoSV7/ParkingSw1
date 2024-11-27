@@ -1,16 +1,22 @@
 import { Type } from "class-transformer";
-import { ArrayMinSize, IsArray, IsNumber, IsPositive, IsString, ValidateNested } from "class-validator";
+import { ArrayMinSize, IsArray, IsIn, IsNumber, IsOptional, IsPositive, IsString, ValidateIf, ValidateNested } from "class-validator";
 
 export class PaymentSessiontDto {
 
     @IsString()
-    orderId: string;
+    @IsOptional()
+    orderId?: string;
 
+    @ValidateIf((o) => o.typePayment === 'Subscription')
     @IsString()
+    idUser?: string;
+
+    @IsIn(['Ticket', 'Subscription'], {
+        message: 'typePayment must be either Ticket or Subscription',
+      })
     typePayment: string;
 
-    @IsString()
-    currency: string;
+
 
     @IsArray()
     @ArrayMinSize(1)

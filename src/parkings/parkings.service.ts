@@ -24,6 +24,7 @@ export class ParkingsService {
 
   async create(createParkingDto: CreateParkingDto) {
     try {
+
       const {idManager,...ParkingDetails} = createParkingDto;
       const parking= this.parkingRepository.create({
         ...ParkingDetails,
@@ -44,6 +45,7 @@ export class ParkingsService {
     const {limit = 10, offset = 0} = paginationDto;
 
     return this.parkingRepository.find({
+      relations: ['lots'],
 
     });
     
