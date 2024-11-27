@@ -56,6 +56,7 @@ export class AuthService {
       }
 
       // Remove password from response
+       // Remove password from response
       const { password: _, ...userWithoutPassword } = savedUser;
 
       return {
