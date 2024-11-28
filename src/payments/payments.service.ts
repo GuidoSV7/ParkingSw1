@@ -60,8 +60,8 @@ export class PaymentsService {
 
       line_items:lineItems,
       mode: 'payment',
-      success_url: 'https://example.com/success',
-      cancel_url: 'https://example.com/cancel',
+      success_url: process.env.STRIPE_SUCCESS,
+      cancel_url: process.env.STRIPE_CANCEL,
 
     });
 
