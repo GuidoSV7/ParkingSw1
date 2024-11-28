@@ -1,15 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { Parking } from 'src/parkings/entities/parking.entity';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 
-@Entity('offers')
+
+@Entity()
 export class Offer {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('varchar')
+  @Column()
   title: string;
 
-  @Column('text')
+  @Column()
   description: string;
 
   @Column('float')
@@ -18,12 +19,10 @@ export class Offer {
   @Column('float')
   discount: number;
 
-  @Column('timestamp')
-  time: Date;
+  @Column()
+  time: string;
 
-  @ManyToOne(() => Parking, (parking) => parking.offers, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Parking, (parking) => parking.offers)
   @JoinColumn({ name: 'idParking' })
   idParking: Parking;
-
-
 }

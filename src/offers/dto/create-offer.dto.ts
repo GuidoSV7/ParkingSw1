@@ -34,8 +34,8 @@ export class CreateOfferDto {
     description: 'Fecha y hora de la oferta',
     example: '2023-07-01T00:00:00Z',
   })
-  @IsDate()
-  time: Date;
+  @IsString()
+  time: string;
 
   @ApiProperty({
     description: 'ID del parking al que pertenece la oferta',

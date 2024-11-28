@@ -18,18 +18,14 @@ export class ParkingsService {
     findAll(paginationDto: PaginationDto) {
         const { limit = 10, offset = 0 } = paginationDto;
         return this.parkingRepository.find({
-            
-            take: limit,
-            skip: offset,
+            relations: ['offers','announcements', 'rules'],
+
         });
     }
 
     async findOne(id: string) {
         const parking = await this.parkingRepository
-            .createQueryBuilder('parking')
-            .where('parking.id = :id', { id })
-            .leftJoinAndSelect('parking.lots', 'lot')
-            .getOne();
+
 
         if (!parking) {
             throw new NotFoundException(`Parking with id ${id} not found`);

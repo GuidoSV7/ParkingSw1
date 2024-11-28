@@ -95,15 +95,6 @@ export class UpdateParkingDto {
   urlGoogleMaps?: string;
 
   @ApiProperty({
-    description: 'Reglas del Parking',
-    example: [{ title: 'No fumar', category: 'Seguridad' }],
-    nullable: true,
-  })
-  @IsOptional()
-  @IsArray()
-  rules?: { title: string; category: string }[];
-
-  @ApiProperty({
     description: 'ID del manager asociado al Parking',
     example: 'uuid-of-manager',
     nullable: true,

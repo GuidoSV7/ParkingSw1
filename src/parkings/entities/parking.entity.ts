@@ -2,6 +2,7 @@ import { Announcement } from "src/announcements/entities/announcement.entity";
 import { Favorite } from "src/favorites/entities/favorite.entity";
 
 import { Offer } from "src/offers/entities/offer.entity";
+import { Rule } from "src/rules/entities/rule.entity";
 import { Manager } from "src/users/entities/manager.entity";
 import { ManyToOne, JoinColumn, Column, PrimaryGeneratedColumn, Entity, OneToMany, OneToOne } from "typeorm";
 
@@ -40,8 +41,6 @@ export class Parking {
     @Column('text', { nullable: true })
     urlGoogleMaps: string;
 
-    @Column('jsonb', { nullable: true })
-    rules: { title: string; category: string }[];
 
     @OneToOne(() => Manager, (manager) => manager.parking, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'idManager' })
@@ -52,6 +51,9 @@ export class Parking {
 
     @OneToMany(() => Offer, (offer) => offer.idParking)
     offers: Offer[];
+
+    @OneToMany(() => Rule, (rule) => rule.idParking)
+    rules: Rule[];
 
     @OneToMany(() => Announcement, announcement => announcement.idParking)
     announcements: Announcement[];

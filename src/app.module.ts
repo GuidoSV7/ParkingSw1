@@ -20,6 +20,7 @@ import { NotificationfcmModule } from './notificationfcm/notificationfcm.module'
 import { OffersModule } from './offers/offers.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { AnnouncementsModule } from './announcements/announcements.module';
+import { RulesModule } from './rules/rules.module';
 
 @Module({
   imports: [
@@ -77,7 +78,9 @@ import { AnnouncementsModule } from './announcements/announcements.module';
 
     FavoritesModule,
 
-    AnnouncementsModule
+    AnnouncementsModule,
+
+    RulesModule
 
 
 

@@ -71,20 +71,20 @@ export class AuthService {
 
   async login(loginUserDto: LoginUserDto) {
     const { password, email } = loginUserDto;
-
+  
     // First find user with basic info + role
     const user = await this.userRepository.findOne({
       where: { email },
       select: { email: true, password: true, rol: true, id: true }
     });
-
-    if (!user)
+  
+    if (!user) 
       throw new UnauthorizedException('Credentials are not valid (email)');
-
+  
     if (!bcrypt.compareSync(password, user.password))
       throw new UnauthorizedException('Credentials are not valid (password)');
-
-    // If user is a manager, get associated parking data
+  
+    // If user is a manager, get associated parking data with offers and announcements
     let parkingData = null;
     if (user.rol === 'manager') {
       parkingData = await this.parkingRepository.findOne({
@@ -92,6 +92,10 @@ export class AuthService {
           manager: {
             id: user.id
           }
+        },
+        relations: {
+          offers: true,
+          announcements: true
         },
         select: {
           id: true,
@@ -104,14 +108,28 @@ export class AuthService {
           direction: true,
           coordinates: true,
           urlGoogleMaps: true,
-          rules: true
+
+          offers: {
+            id: true,
+            title: true,
+            description: true,
+            price: true,
+            discount: true,
+            time: true
+          },
+          announcements: {
+            id: true,
+            title: true,
+            description: true,
+            
+          }
         }
       });
     }
-
+  
     // Remove password from user data
     const { password: _, ...userWithoutPassword } = user;
-
+  
     return {
       ...userWithoutPassword,
       token: this.getJwtToken({ id: user.id }),
@@ -139,8 +157,7 @@ export class AuthService {
           cellphone: true,
           direction: true,
           coordinates: true,
-          urlGoogleMaps: true,
-          rules: true
+          urlGoogleMaps: true
         }
       });
     }

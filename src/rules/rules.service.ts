@@ -1,26 +1,26 @@
 import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
-import { CreateOfferDto } from './dto/create-offer.dto';
-import { UpdateOfferDto } from './dto/update-offer.dto';
+import { CreateRuleDto } from './dto/create-rule.dto';
+import { UpdateRuleDto } from './dto/update-rule.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { NotificationfcmService } from 'src/notificationfcm/notificationfcm.service';
 import { Parking } from 'src/parkings/entities/parking.entity';
 import { Repository, DataSource } from 'typeorm';
-import { Offer } from './entities/offer.entity';
+import { Rule } from './entities/rule.entity';
 import { Client } from 'src/users/entities/client.entity';
 
 @Injectable()
-export class OffersService {
-  private readonly logger = new Logger('offersService');
-  
+export class RulesService {
+
+  private readonly logger = new Logger('rulesService');
 
   constructor(
 
    
 
-    @InjectRepository(Offer)
-    private readonly offerRepository: Repository<Offer>,
+    @InjectRepository(Rule)
+    private readonly ruleRepository: Repository<Rule>,
 
     @InjectRepository(Parking)
     private readonly parkingRepository: Repository<Parking>,
@@ -37,11 +37,11 @@ export class OffersService {
     private readonly dataSource: DataSource,
   ){}
 
-  async create(createOfferDto: CreateOfferDto) {
+  async create(createRuleDto: CreateRuleDto) {
     try {
-      const {idParking,...OfferDetails} = createOfferDto;
-      const offer= this.offerRepository.create({
-        ...OfferDetails,
+      const {idParking,...RuleDetails} = createRuleDto;
+      const rule= this.ruleRepository.create({
+        ...RuleDetails,
         idParking: { id: idParking }
       });
 
@@ -60,12 +60,12 @@ export class OffersService {
   //  if (tokens.length > 0) {
   //    await this.notificationfcmService.sendNotificationToMultipleTokens({
   //      tokens,
-  //      title: offer.title,
-  //      body: offer.description,
+  //      title: rule.title,
+  //      body: rule.description,
   //    });
   //  }
 
-      return await this.offerRepository.save(offer);
+      return await this.ruleRepository.save(rule);
       
     } catch (error) {
       
@@ -78,24 +78,24 @@ export class OffersService {
 
     const {limit = 10, offset = 0} = paginationDto;
 
-    return this.offerRepository.find({
+    return this.ruleRepository.find({
     });
     
   }
 
   async findOne(id: string) {
-    const offer = await this.offerRepository.findOne({
+    const rule = await this.ruleRepository.findOne({
       where: { id },
       relations: ['parking'],
     });
 
-    if (!offer) {
-      throw new NotFoundException(`Offer con id ${id} no encontrada`);
+    if (!rule) {
+      throw new NotFoundException(`Rule con id ${id} no encontrada`);
     }
 
-    return offer;
+    return rule;
   }
-  async update(id: string, updateOfferDto: UpdateOfferDto) {
+  async update(id: string, updateRuleDto: UpdateRuleDto) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
     await queryRunner.startTransaction();
@@ -103,38 +103,38 @@ export class OffersService {
     try {
       // First, find the parking if idParking is provided
       let parking: Parking | null = null;
-      if (updateOfferDto.idParking) {
+      if (updateRuleDto.idParking) {
         parking = await this.parkingRepository.findOne({
-          where: { id: updateOfferDto.idParking },
+          where: { id: updateRuleDto.idParking },
         });
         
         if (!parking) {
           throw new NotFoundException(
-            `Parking con id ${updateOfferDto.idParking} no encontrado`,
+            `Parking con id ${updateRuleDto.idParking} no encontrado`,
           );
         }
       }
 
-      // Prepare the offer data for update
+      // Prepare the rule data for update
       const toUpdate = {
-        ...updateOfferDto,
+        ...updateRuleDto,
         parking: parking, // Replace idParking with the actual parking entity
       };
       delete toUpdate.idParking; // Remove idParking as we're using the parking relation
 
-      // Preload the offer with the updates
-      const offer = await this.offerRepository.preload({
+      // Preload the rule with the updates
+      const rule = await this.ruleRepository.preload({
         id,
         ...toUpdate,
         idParking: parking ? { id: parking.id } : undefined,
       });
 
-      if (!offer) {
-        throw new NotFoundException(`Offer con id ${id} no encontrada`);
+      if (!rule) {
+        throw new NotFoundException(`Rule con id ${id} no encontrada`);
       }
 
-      // Save the updated offer
-      await queryRunner.manager.save(offer);
+      // Save the updated rule
+      await queryRunner.manager.save(rule);
       await queryRunner.commitTransaction();
 
       return this.findOne(id);
@@ -144,7 +144,7 @@ export class OffersService {
         throw error;
       }
       throw new InternalServerErrorException(
-        'Error al actualizar los datos de la Offer',
+        'Error al actualizar los datos de la Rule',
       );
     } finally {
       await queryRunner.release();
@@ -156,16 +156,16 @@ export class OffersService {
 
   async remove(id: string) {
 
-    const offer= await this.findOne(id);
+    const rule= await this.findOne(id);
 
-    await this.offerRepository.remove(offer);
+    await this.ruleRepository.remove(rule);
 
-    return { mensaje: `La offer con id ${id} se eliminó exitosamente.` };
+    return { mensaje: `La rule con id ${id} se eliminó exitosamente.` };
 
   }
 
-  async deleteAllOffers(){
-    const query = this.offerRepository.createQueryBuilder('offer');
+  async deleteAllRules(){
+    const query = this.ruleRepository.createQueryBuilder('rule');
 
     try{
       return await query
