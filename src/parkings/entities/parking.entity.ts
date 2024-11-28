@@ -3,6 +3,7 @@ import { Favorite } from "src/favorites/entities/favorite.entity";
 
 import { Offer } from "src/offers/entities/offer.entity";
 import { Rule } from "src/rules/entities/rule.entity";
+import { Ticket } from "src/tickets/entities/ticket.entity";
 import { Manager } from "src/users/entities/manager.entity";
 import { ManyToOne, JoinColumn, Column, PrimaryGeneratedColumn, Entity, OneToMany, OneToOne } from "typeorm";
 
@@ -57,4 +58,7 @@ export class Parking {
 
     @OneToMany(() => Announcement, announcement => announcement.idParking)
     announcements: Announcement[];
+
+    @OneToMany(() => Ticket, (ticket) => ticket.idParking)
+    tickets: Ticket[];
 }

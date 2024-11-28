@@ -99,8 +99,7 @@ export class PaymentsService {
           const ticket = await this.ticketRepository.findOne({
             where: {
               id: chargeSucceeded.metadata.orderId,
-            },
-            relations: ['lot'],
+            }
           });
         
           

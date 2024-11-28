@@ -1,13 +1,13 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsDate, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsDate, IsNumber, IsOptional, IsString, IsUUID } from "class-validator";
 
 export class CreateTicketDto {
     @ApiProperty({
         description: 'Fecha y hora de entrada',
         example: '2023-07-01T08:00:00Z',
       })
-      @IsDate()
-      entrance: Date;
+      @IsString()
+      entrance: String;
     
       @ApiProperty({
         description: 'Fecha y hora de salida',
@@ -15,8 +15,8 @@ export class CreateTicketDto {
         required: false,
       })
       @IsOptional()
-      @IsDate()
-      exit?: Date;
+      @IsString()
+      exit?: String;
     
       @ApiProperty({
         description: 'Estado del ticket',
@@ -40,6 +40,20 @@ export class CreateTicketDto {
       @IsOptional()
       @IsString()
       extra?: string;
+
+      @ApiProperty({
+        description: 'ID del cliente asociado al ticket',
+        example: 'uuid-of-client',
+      })
+      @IsUUID()
+      idClient: string;
+    
+      @ApiProperty({
+        description: 'ID del parking asociado al ticket',
+        example: 'uuid-of-parking',
+      })
+      @IsUUID()
+      idParking: string;
 
    
 }

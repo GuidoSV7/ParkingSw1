@@ -5,7 +5,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { Repository, DataSource } from 'typeorm';
 import { Ticket } from './entities/ticket.entity';
-import { Lot } from 'src/lots/entities/lot.entity';
 
 @Injectable()
 export class TicketsService {
@@ -18,9 +17,6 @@ export class TicketsService {
 
     @InjectRepository(Ticket)
     private readonly ticketRepository: Repository<Ticket>,
-
-    @InjectRepository(Lot)
-    private readonly lotRepository: Repository<Lot>,
     
     
     private readonly dataSource: DataSource,
@@ -28,9 +24,11 @@ export class TicketsService {
 
   async create(createTicketDto: CreateTicketDto) {
     try {
-      const {...TicketDetails} = createTicketDto;
+      const {idClient,idParking,...TicketDetails} = createTicketDto;
       const ticket= this.ticketRepository.create({
-        ...TicketDetails
+        ...TicketDetails,
+        idClient: { id: idClient },
+        idParking: { id: idParking }
       });
 
 
@@ -78,7 +76,7 @@ export class TicketsService {
 
   async update(id: string, updateTicketDto: UpdateTicketDto) {
 
-    const {...toUpdate} = updateTicketDto;
+    const {idClient, idParking,...toUpdate} = updateTicketDto;
 
     const ticket = await this.ticketRepository.preload({ id, ...toUpdate});
 
