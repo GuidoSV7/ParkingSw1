@@ -48,6 +48,7 @@ export class TicketsService {
     const {limit = 10, offset = 0} = paginationDto;
 
     return this.ticketRepository.find({
+      relations: ['idClient','idParking']
    
 
     });
