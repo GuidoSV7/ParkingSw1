@@ -86,7 +86,9 @@ export class RulesService {
   async findOne(id: string) {
     const rule = await this.ruleRepository.findOne({
       where: { id },
-      relations: ['parking'],
+      relations: {
+        idParking: true // Usar idParking en lugar de parking
+      }
     });
 
     if (!rule) {
@@ -95,6 +97,8 @@ export class RulesService {
 
     return rule;
   }
+
+
   async update(id: string, updateRuleDto: UpdateRuleDto) {
     const queryRunner = this.dataSource.createQueryRunner();
     await queryRunner.connect();
@@ -118,15 +122,14 @@ export class RulesService {
       // Prepare the rule data for update
       const toUpdate = {
         ...updateRuleDto,
-        parking: parking, // Replace idParking with the actual parking entity
+        idParking: parking, // Usar idParking en lugar de parking
       };
-      delete toUpdate.idParking; // Remove idParking as we're using the parking relation
+      delete toUpdate.idParking; // Remover el string idParking del DTO
 
       // Preload the rule with the updates
       const rule = await this.ruleRepository.preload({
         id,
         ...toUpdate,
-        idParking: parking ? { id: parking.id } : undefined,
       });
 
       if (!rule) {

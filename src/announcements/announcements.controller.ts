@@ -28,12 +28,12 @@ export class AnnouncementsController {
     return this.announcementsService.findOne(id);
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string ,
-  //       @Body() updateAnnouncementDto: UpdateAnnouncementDto) 
-  //       {
-  //   return this.announcementsService.update(id, updateAnnouncementDto);
-  // }
+  @Patch(':id')
+  update(@Param('id') id: string ,
+        @Body() updateAnnouncementDto: UpdateAnnouncementDto) 
+        {
+    return this.announcementsService.update(id, updateAnnouncementDto);
+  }
 
   @Delete(':id')
   remove(@Param('id') id: string) {

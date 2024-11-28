@@ -13,7 +13,7 @@ export class Rule {
     description: string;
   
   
-    @ManyToOne(() => Parking, (parking) => parking.offers)
+    @ManyToOne(() => Parking, (parking) => parking.rules)
     @JoinColumn({ name: 'idParking' })
     idParking: Parking;
 }

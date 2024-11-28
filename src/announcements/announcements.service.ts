@@ -101,44 +101,61 @@ export class AnnouncementsService {
     
   }
 
-  // async update(id: string, updateAnnouncementDto: UpdateAnnouncementDto) {
+  async update(id: string, updateAnnouncementDto: UpdateAnnouncementDto) {
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-  //   const {...toUpdate} = updateAnnouncementDto;
+    try {
+      // First, find the parking if idParking is provided
+      let parking: Parking | null = null;
+      if (updateAnnouncementDto.idParking) {
+        parking = await this.parkingRepository.findOne({
+          where: { id: updateAnnouncementDto.idParking },
+        });
+        
+        if (!parking) {
+          throw new NotFoundException(
+            `Parking con id ${updateAnnouncementDto.idParking} no encontrado`,
+          );
+        }
+      }
 
-  //   const announcement = await this.announcementRepository.preload({ id, ...toUpdate});
+      // Prepare the announcement data for update
+      const toUpdate = {
+        ...updateAnnouncementDto,
+        idParking: parking, // Replace idParking string with the actual parking entity
+      };
+      delete toUpdate.idParking; // Remove the string idParking from DTO
 
-  //   if(!announcement){
-  //     throw new NotFoundException(`Announcement con id ${id} no encontrada`);
-  //   }
+      // Preload the announcement with the updates
+      const announcement = await this.announcementRepository.preload({
+        id,
+        ...toUpdate,
+      });
 
-  //   //Create Query Runner
-  //   const queryRunner = this.dataSource.createQueryRunner();
-    
-  //   await queryRunner.connect();
+      if (!announcement) {
+        throw new NotFoundException(`Announcement con id ${id} no encontrado`);
+      }
 
-  //   await queryRunner.startTransaction();
+      // Save the updated announcement
+      await queryRunner.manager.save(announcement);
+      await queryRunner.commitTransaction();
 
-  //   try{
+      return this.findOne(id);
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      throw new InternalServerErrorException(
+        'Error al actualizar los datos del Announcement',
+      );
+    } finally {
+      await queryRunner.release();
+    }
+  }
 
-
-
-  //     await queryRunner.manager.save(announcement);
-
-  //     await queryRunner.commitTransaction();
-  //     await queryRunner.release();
-
-  //     return this.findOne(id);
-
-  //   } catch{
-      
-  //     await queryRunner.rollbackTransaction();
-  //     await queryRunner.release();
-
-  //     throw new InternalServerErrorException('Error al actualizar los datos de la Announcement');
-  //   }
-  
-    
-  // }
 
 
 
