@@ -78,7 +78,7 @@ export class AuthService {
       select: { email: true, password: true, rol: true, id: true }
     });
   
-    if (!user) 
+    if (!user)
       throw new UnauthorizedException('Credentials are not valid (email)');
   
     if (!bcrypt.compareSync(password, user.password))
@@ -95,7 +95,8 @@ export class AuthService {
         },
         relations: {
           offers: true,
-          announcements: true
+          announcements: true,
+          rules: true
         },
         select: {
           id: true,
@@ -108,7 +109,6 @@ export class AuthService {
           direction: true,
           coordinates: true,
           urlGoogleMaps: true,
-
           offers: {
             id: true,
             title: true,
@@ -120,8 +120,11 @@ export class AuthService {
           announcements: {
             id: true,
             title: true,
-            description: true,
-            
+            description: true
+          },
+          rules: {
+            id: true,
+            title: true
           }
         }
       });
@@ -132,38 +135,6 @@ export class AuthService {
   
     return {
       ...userWithoutPassword,
-      token: this.getJwtToken({ id: user.id }),
-      parking: parkingData
-    };
-  }
-
-  async checkAuthStatus(user: User) {
-    // If user is a manager, get associated parking data
-    let parkingData = null;
-    if (user.rol === 'manager') {
-      parkingData = await this.parkingRepository.findOne({
-        where: {
-          manager: {
-            id: user.id
-          }
-        },
-        select: {
-          id: true,
-          name: true,
-          photoUrl: true,
-          numberOfSpaces: true,
-          openingHours: true,
-          email: true,
-          cellphone: true,
-          direction: true,
-          coordinates: true,
-          urlGoogleMaps: true
-        }
-      });
-    }
-
-    return {
-      ...user,
       token: this.getJwtToken({ id: user.id }),
       parking: parkingData
     };

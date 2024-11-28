@@ -25,6 +25,12 @@ export class ParkingsService {
 
     async findOne(id: string) {
         const parking = await this.parkingRepository
+            .createQueryBuilder('parking')
+            .leftJoinAndSelect('parking.offers', 'offers')
+            .leftJoinAndSelect('parking.announcements', 'announcements')
+            .leftJoinAndSelect('parking.rules', 'rules')
+            .where('parking.id = :id', { id })
+            .getOne();
 
 
         if (!parking) {
