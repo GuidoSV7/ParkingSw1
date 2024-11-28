@@ -54,5 +54,16 @@ export class TicketsController {
     return this.ticketsService.remove(id);
   }
 
+
+  @Get('parking/:parkingId')
+  @ApiResponse({ status: 200, description: 'Tickets encontrados exitosamente', type: [Ticket] })
+  @ApiResponse({ status: 404, description: 'No se encontraron tickets para este parking' })
+  findByParkingId(
+    @Param('parkingId') parkingId: string,
+    @Query() paginationDto: PaginationDto
+  ) {
+    return this.ticketsService.findByParkingId(parkingId, paginationDto);
+  }
+
   
 }

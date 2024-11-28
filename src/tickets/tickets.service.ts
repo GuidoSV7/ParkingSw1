@@ -156,4 +156,29 @@ export class TicketsService {
     return this.ticketRepository.save(ticket);
   }
 
+  
+  async findByParkingId(parkingId: string, paginationDto: PaginationDto) {
+    const { limit = 10, offset = 0 } = paginationDto;
+
+    try {
+      const tickets = await this.ticketRepository.find({
+        where: {
+          idParking: { id: parkingId }
+        },
+        relations: ['idClient'],
+        skip: offset,
+        take: limit,
+      });
+
+      if (!tickets.length) {
+        throw new NotFoundException(`No se encontraron tickets para el parking con ID ${parkingId}`);
+      }
+
+      return tickets;
+    } catch (error) {
+      this.logger.error(error.message);
+      throw error;
+    }
+  }
+
 }
