@@ -124,7 +124,8 @@ export class AuthService {
           },
           rules: {
             id: true,
-            title: true
+            title: true,
+            description: true
           }
         }
       });
